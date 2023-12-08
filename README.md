@@ -10,7 +10,7 @@ This package provides a way to create composable components with slots.
 ### Basic usage
 
 ```tsx
-import { SlotProvider, Slot, slotElement } from "@paulhalleux/react-slot";
+import { SlotProvider, Slot, SlotExist, slotElement } from "@paulhalleux/react-slot";
 import { PropsWithChildren } from "react";
 
 const ElementTypes = {
@@ -25,15 +25,17 @@ export function ComposableComponent(props: PropsWithChildren) {
       <Slot elementType={ElementTypes.Header}>
         {(element) => <div>Wrapped: {element}</div>}
       </Slot>
-      <hr />
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Slot
-          elementType={ElementTypes.Number}
-          params={{ num: i }}
-          key={`n_${i}`}
-        />
-      ))}
-      <hr />
+      <Slot.Exist elementType={ElementTypes.Number}>
+        <hr />
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Slot
+            elementType={ElementTypes.Number}
+            params={{ num: i }}
+            key={`n_${i}`}
+          />
+        ))}
+        <hr />
+      </Slot.Exist>
       <Slot elementType={ElementTypes.Footer} />
     </SlotProvider>
   );

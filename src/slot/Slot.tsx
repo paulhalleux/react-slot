@@ -1,6 +1,8 @@
 import { SlotConditionFn, SlotElement } from "../types";
-import { useSlot } from "./useSlot.tsx";
 import React, { ComponentProps, ReactElement, ReactNode } from "react";
+import { SlotList } from "./SlotList.tsx";
+import { useSlot } from "../hooks/useSlot.tsx";
+import { SlotExist } from "./SlotExist.tsx";
 
 export type SlotProps<Params = never> = {
   elementType: symbol;
@@ -11,7 +13,7 @@ export type SlotProps<Params = never> = {
 
 export function Slot<Params = never>(props: SlotProps<Params>) {
   const element = useSlot(props);
-  if (!element) return null;
+  if (!element) return <React.Fragment />;
   const elementWithProps = React.cloneElement(element, {
     __params: props.params || {},
   } as ComponentProps<typeof element.type> & {
@@ -20,3 +22,6 @@ export function Slot<Params = never>(props: SlotProps<Params>) {
 
   return props.children ? props.children(elementWithProps) : elementWithProps;
 }
+
+Slot.List = SlotList;
+Slot.Exist = SlotExist;
