@@ -10,13 +10,13 @@ This package provides a way to create composable components with slots.
 ### Basic usage
 
 ```tsx
-import { SlotProvider, Slot, createElementType, slottable, parametrizedSlottable } from "@paulhalleux/react-slot";
+import { SlotProvider, Slot, slotElement } from "@paulhalleux/react-slot";
 import { PropsWithChildren } from "react";
 
 const ElementTypes = {
-  Footer: createElementType("Footer"),
-  Header: createElementType("Header"),
-  Number: createElementType("Number"),
+  Footer: Symbol("Footer"),
+  Header: Symbol("Header"),
+  Number: Symbol("Number"),
 };
 
 export function ComposableComponent(props: PropsWithChildren) {
@@ -37,21 +37,15 @@ export function ComposableComponent(props: PropsWithChildren) {
   );
 }
 
-ComposableComponent.Header = slottable(
-  () => <header>Header</header>,
-  ElementTypes.Header,
-);
+ComposableComponent.Header = slotElement(ElementTypes.Header, () => (
+  <header>Header</header>
+));
 
-ComposableComponent.Footer = slottable(
-  () => <footer>Footer</footer>,
-  ElementTypes.Footer,
-);
+ComposableComponent.Footer = slotElement(ElementTypes.Footer, () => (
+  <footer>Footer</footer>
+));
 
-// This component will render with the number passed in props
-ComposableComponent.Number = parametrizedSlottable<{ num: number }>(
-  ElementTypes.Number,
-);
-
+ComposableComponent.Number = slotElement<{ num: number }>(ElementTypes.Number);
 ```
 
 ---
@@ -60,8 +54,8 @@ Component can be used like this:
 
 ```tsx
 <ComposableComponent>
-  <ComposableComponent.Footer />
   <ComposableComponent.Header />
+  <ComposableComponent.Footer />
   <ComposableComponent.Number>
     {({ num }) => <div>Number: {num}</div>}
   </ComposableComponent.Number>
