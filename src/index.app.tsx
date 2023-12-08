@@ -12,7 +12,9 @@ const ElementTypes = {
 export function ComposableComponent(props: PropsWithChildren) {
   return (
     <SlotProvider slotChildren={props.children}>
-      <Slot elementType={ElementTypes.Header} />
+      <Slot elementType={ElementTypes.Header}>
+        {(element) => <div>Wrapped: {element}</div>}
+      </Slot>
       <hr />
       {Array.from({ length: 5 }).map((_, i) => (
         <Slot

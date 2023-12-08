@@ -13,7 +13,9 @@ type ParameterizedProps<Params> = {
  */
 export function slotElement<
   Params = unknown,
-  Props = Params extends {} ? ParameterizedProps<Params> : {},
+  Props = Params extends NonNullable<unknown>
+    ? ParameterizedProps<Params>
+    : NonNullable<unknown>,
 >(
   elementType: symbol,
   Component:
