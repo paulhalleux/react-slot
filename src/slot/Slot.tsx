@@ -1,19 +1,20 @@
 import React, {
   ComponentProps,
+  PropsWithChildren,
   ReactElement,
   ReactNode,
   useContext,
   useMemo,
 } from "react";
 
-import { SlotList } from "./SlotList.tsx";
-import { SlotExist } from "./SlotExist.tsx";
-
 import { SlotConditionFn, SlotElement } from "../types";
 import { SlotContext } from "./slot-context.tsx";
-import { findFirstMatchingElement } from "../utils";
+import { findFirstMatchingElement, findMatchingElements } from "../utils";
+import { useSlotExist } from "./useSlotExist.tsx";
 
-export type SlotProps<Params = never> = {
+// ------------ Slot ------------
+
+type SlotProps<Params = never> = {
   elementType: symbol;
   condition?: SlotConditionFn;
   params?: Params;
@@ -43,5 +44,58 @@ export function Slot<Params = never>(props: SlotProps<Params>) {
   return props.children ? props.children(elementWithProps) : elementWithProps;
 }
 
+// ------------ Slot.List ------------
+
+type SlotListProps = {
+  elementType: symbol;
+  condition?: SlotConditionFn;
+} & (
+  | {
+      single: true;
+      children?: (
+        element: ReactElement,
+        index: number,
+        elements: ReactElement[],
+      ) => ReactNode;
+    }
+  | {
+      single?: never;
+      children?: (elements: ReactElement[]) => ReactNode;
+    }
+);
+
+function SlotList(props: SlotListProps) {
+  const { slotElements } = useContext(SlotContext);
+  const elements = useMemo(
+    () =>
+      findMatchingElements(slotElements, props.elementType, props.condition),
+    [slotElements, props],
+  );
+
+  const { children, single } = props;
+  if (!children) return <React.Fragment />;
+  if (single === true)
+    return (
+      <>
+        {elements.map((element, index) => children(element, index, elements))}
+      </>
+    );
+  return <>{children(elements)}</>;
+}
+
 Slot.List = SlotList;
-Slot.Exist = SlotExist;
+
+// ------------ Slot.If ------------
+
+type SlotExistProps = PropsWithChildren<{
+  elementType: symbol;
+  condition?: SlotConditionFn;
+}>;
+
+function SlotExist(props: SlotExistProps) {
+  const exist = useSlotExist(props);
+  if (!exist) return <React.Fragment />;
+  return <>{props.children}</>;
+}
+
+Slot.If = SlotExist;

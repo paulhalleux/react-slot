@@ -17,9 +17,17 @@ export const SlotContext = createContext<SlotContextType>({
 
 export type SlotProviderProps = PropsWithChildren<{
   slotChildren: ReactNode;
+  as?: React.ElementType;
+  className?: string;
+  style?: React.CSSProperties;
 }>;
 
-export const SlotProvider = ({ children, slotChildren }: SlotProviderProps) => {
+export const SlotProvider = ({
+  children,
+  slotChildren,
+  as: Wrapper = React.Fragment,
+  ...props
+}: SlotProviderProps) => {
   const childElements = useMemo(
     () =>
       React.Children.toArray(slotChildren)
@@ -34,7 +42,7 @@ export const SlotProvider = ({ children, slotChildren }: SlotProviderProps) => {
         slotElements: childElements,
       }}
     >
-      {children}
+      <Wrapper {...props}>{children}</Wrapper>
     </SlotContext.Provider>
   );
 };
