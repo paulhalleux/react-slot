@@ -1,7 +1,9 @@
 import { useContext, useMemo } from "react";
-import { findFirstMatchingElement } from "../utils/children.ts";
-import { SlotContext } from "../slot/slot-context.tsx";
-import { SlotExistProps } from "../slot/SlotExist.tsx";
+
+import { SlotContext } from "./slot-context.tsx";
+import { SlotExistProps } from "./SlotExist.tsx";
+
+import { findFirstMatchingElement } from "../utils";
 
 /**
  * This is the hook that is used by the SlotExist component to find if there is a matching element.

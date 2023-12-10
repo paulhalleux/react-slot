@@ -1,5 +1,19 @@
 import { SlotConditionFn, SlotElement } from "../types";
 
+function getPredicate(elementType: symbol, condition?: SlotConditionFn) {
+  return (element: SlotElement) => {
+    if (element.type.__elementType === elementType) {
+      if (condition) {
+        return condition(element);
+      }
+
+      return true;
+    }
+
+    return false;
+  };
+}
+
 /**
  * Finds the first matching element in an array of React elements.
  * @param elements The array of React elements to search.
@@ -12,17 +26,7 @@ export function findMatchingElements(
   elementType: symbol,
   condition?: SlotConditionFn,
 ) {
-  return elements.filter((element) => {
-    if (element.type.__elementType === elementType) {
-      if (condition) {
-        return condition(element);
-      }
-
-      return true;
-    }
-
-    return false;
-  });
+  return elements.filter(getPredicate(elementType, condition));
 }
 
 /**
@@ -37,15 +41,5 @@ export function findFirstMatchingElement(
   elementType: symbol,
   condition?: SlotConditionFn,
 ) {
-  return elements.find((element) => {
-    if (element.type.__elementType === elementType) {
-      if (condition) {
-        return condition(element);
-      }
-
-      return true;
-    }
-
-    return false;
-  });
+  return elements.find(getPredicate(elementType, condition));
 }

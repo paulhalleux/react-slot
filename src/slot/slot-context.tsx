@@ -4,7 +4,7 @@ import React, {
   ReactNode,
   useMemo,
 } from "react";
-import { isSlottableElement } from "../utils/slot.ts";
+import { isSlottableElement } from "../utils";
 import { SlotElement } from "../types";
 
 export type SlotContextType = {

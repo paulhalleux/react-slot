@@ -1,6 +1,8 @@
-import { SlotConditionFn } from "../types";
 import React, { PropsWithChildren } from "react";
-import { useSlotExist } from "../hooks/useSlotExist.tsx";
+
+import { useSlotExist } from "./useSlotExist.tsx";
+
+import { SlotConditionFn } from "../types";
 
 export type SlotExistProps = PropsWithChildren<{
   elementType: symbol;

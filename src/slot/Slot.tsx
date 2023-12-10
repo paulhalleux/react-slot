@@ -1,8 +1,17 @@
-import { SlotConditionFn, SlotElement } from "../types";
-import React, { ComponentProps, ReactElement, ReactNode } from "react";
+import React, {
+  ComponentProps,
+  ReactElement,
+  ReactNode,
+  useContext,
+  useMemo,
+} from "react";
+
 import { SlotList } from "./SlotList.tsx";
-import { useSlot } from "../hooks/useSlot.tsx";
 import { SlotExist } from "./SlotExist.tsx";
+
+import { SlotConditionFn, SlotElement } from "../types";
+import { SlotContext } from "./slot-context.tsx";
+import { findFirstMatchingElement } from "../utils";
 
 export type SlotProps<Params = never> = {
   elementType: symbol;
@@ -12,8 +21,19 @@ export type SlotProps<Params = never> = {
 };
 
 export function Slot<Params = never>(props: SlotProps<Params>) {
-  const element = useSlot(props);
+  const { slotElements } = useContext(SlotContext);
+  const element = useMemo(() => {
+    const element = findFirstMatchingElement(
+      slotElements,
+      props.elementType,
+      props.condition,
+    );
+
+    return element || null;
+  }, [slotElements, props]);
+
   if (!element) return <React.Fragment />;
+
   const elementWithProps = React.cloneElement(element, {
     __params: props.params || {},
   } as ComponentProps<typeof element.type> & {
