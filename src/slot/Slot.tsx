@@ -87,7 +87,7 @@ Slot.List = SlotList;
 
 // ------------ Slot.If ------------
 
-type SlotExistProps = PropsWithChildren<{
+export type SlotExistProps = PropsWithChildren<{
   elementType: symbol;
   condition?: SlotConditionFn;
 }>;

@@ -3,6 +3,8 @@
 
 # @paulhalleux/react-slot
 
+[![Build](https://github.com/paulhalleux/react-slot/actions/workflows/build.yml/badge.svg)](https://github.com/paulhalleux/react-slot/actions/workflows/build.yml)
+
 This package provides a way to create composable components with slots.
 
 ## Summary
